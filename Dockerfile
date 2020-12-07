@@ -1,4 +1,5 @@
 FROM node:13-alpine
+FROM jenkins/jenkins
 
 ENV MONGO_DB_USERNAME=admin \
     MONGO_DB_PWD=password
@@ -15,4 +16,7 @@ RUN npm install
 
 # no need for /home/app/server.js because of WORKDIR
 CMD ["node", "server.js"]
+
+USER Jenkins
+RUN Jenkins-plugin-sli
 
