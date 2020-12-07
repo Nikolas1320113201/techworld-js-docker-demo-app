@@ -10,14 +10,6 @@ pipeline {
                 }
             }
         }
-        stage('Run back-end') {
-            steps {
-                echo 'executing gradle'
-                withGradle(){
-                    sh './gradlew -v'
-                }
-            }
-        }
         stage('Run testing') {
             steps {
                 echo 'Test are sucsesful...'
