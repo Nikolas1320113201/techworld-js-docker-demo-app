@@ -1,6 +1,6 @@
 pipeline {
     agent any
-
+  
     stages {
         stage('Run front-end') {
             steps {
@@ -10,17 +10,23 @@ pipeline {
                 }
             }
         }
+        stage('Build') {
+            steps {
+                sh 'make' 
+                archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true 
+            }
+        }
         stage('Run testing') {
             agent{ 
                 docker { image 'alpine' args '-u=\"root\"'}
             }
-            steps {
-                sh 'install xmlrunner'
-               
+        steps {
+                sh 'make check || true' 
+                junit '**/target/*.xml' 
             }
             post{
                 always{
-                    junit 'test-reports/*.xml'
+                    junit '**/target/*.xml' 
                 }
                 success{
                     echo 'Test are sucsesful...'
@@ -28,6 +34,16 @@ pipeline {
                 failure{
                     echo 'Test are failed...'
                 }
+            }
+        }
+        stage('Deploy') {
+            when {
+              expression {
+                currentBuild.result == null || currentBuild.result == 'SUCCESS' 
+              }
+            }
+            steps {
+                sh 'make publish'
             }
         }
     }
