@@ -16,7 +16,7 @@ pipeline {
             }
             steps {
                 sh 'install xmlrunner'
-                echo 'Test are sucsesful...'
+               
             }
             post{
                 always{
